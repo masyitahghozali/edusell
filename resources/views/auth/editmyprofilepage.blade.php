@@ -16,22 +16,42 @@
 
         <div class="grid gap-6 md:grid-cols-[260px,1fr]">
 
-            {{-- LEFT --}}
-            <div class="rounded-2xl bg-white shadow-md p-6 flex flex-col items-center">
-                <div class="relative h-32 w-32 rounded-full border-2 border-slate-200 overflow-hidden mb-4">
-                    @if($user->user_profile_picture)
-                        <img src="{{ asset('storage/'.$user->user_profile_picture) }}"
-                             class="h-full w-full object-cover">
-                    @else
-                        <img src="{{ asset('images/avatar-placeholder.png') }}"
-                             class="h-full w-full object-cover">
-                    @endif
-                </div>
+            {{-- LEFT COLUMN --}}
+    <div class="rounded-2xl bg-white shadow-md p-6 flex flex-col items-center">
 
-                <div class="text-center text-xs text-slate-500">
-                    Visible to buyers and sellers you interact with.
-                </div>
-            </div>
+        <div
+            id="avatarWrapper"
+            class="relative h-32 w-32 rounded-full border-2 border-slate-200 overflow-hidden mb-3 cursor-grab">
+
+            <img
+                id="avatarPreview"
+                src="{{ $user->user_profile_picture
+                    ? asset('storage/'.$user->user_profile_picture)
+                    : asset('images/avatar-placeholder.png') }}"
+                class="absolute inset-0 w-full h-full object-cover"
+                style="transform: translateY(0px);">
+        </div>
+
+        <label
+            class="cursor-pointer inline-flex items-center rounded-lg
+                border border-slate-300 bg-white px-4 py-1.5
+                text-xs font-medium text-slate-700 hover:bg-slate-50">
+
+            Add photo
+            <input
+                type="file"
+                name="user_profile_picture"
+                accept="image/*"
+                class="hidden"
+                onchange="previewAvatar(event)">
+        </label>
+
+        <div class="mt-3 text-center text-xs text-slate-500">
+            Drag photo up or down inside the circle.
+        </div>
+    </div>
+
+
 
             {{-- RIGHT --}}
             <div class="rounded-2xl bg-white shadow-md p-6">
@@ -340,5 +360,42 @@
             }
         });
     </script>
+
+    {{-- PROFILE PICTURE SCRIPT --}}
+    <script>
+        let startY = 0;
+        let currentY = 0;
+        let dragging = false;
+
+        function previewAvatar(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const img = document.getElementById('avatarPreview');
+            const reader = new FileReader();
+
+            reader.onload = e => img.src = e.target.result;
+            reader.readAsDataURL(file);
+        }
+
+        const wrapper = document.getElementById('avatarWrapper');
+        const img = document.getElementById('avatarPreview');
+
+        wrapper.addEventListener('mousedown', e => {
+            dragging = true;
+            startY = e.clientY - currentY;
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            currentY = e.clientY - startY;
+            img.style.transform = `translateY(${currentY}px)`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            dragging = false;
+        });
+</script>
+
 
 </x-app-layout>

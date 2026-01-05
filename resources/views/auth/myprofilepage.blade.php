@@ -15,20 +15,20 @@
             My Profile
         </h1>
 
-        {{-- MAIN LAYOUT: AVATAR + INFO --}}
+        {{-- MAIN LAYOUT --}}
         <div class="grid gap-6 md:grid-cols-[260px,1fr]">
 
-            {{-- LEFT COLUMN: Avatar + basic info + edit --}}
+            {{-- LEFT COLUMN --}}
             <div class="rounded-2xl bg-white shadow-md p-6 flex flex-col items-center">
 
                 {{-- Avatar --}}
                 <div class="h-32 w-32 rounded-full border-2 border-slate-200 overflow-hidden mb-4">
                     @if($user->user_profile_picture)
-                        <img src="{{ asset('storage/profile_pictures/'.$user->user_profile_picture) }}"
-                             alt="Profile photo"
-                             class="h-full w-full object-cover">
+                        <img src="{{ asset('storage/'.$user->user_profile_picture) }}"
+                            alt="Profile photo"
+                            class="h-full w-full object-cover">
                     @else
-                        {{-- fallback image --}}
+
                         <img src="{{ asset('images/avatar-placeholder.png') }}"
                              alt="Profile photo"
                              class="h-full w-full object-cover">
@@ -58,7 +58,7 @@
                     @endif
                 </div>
 
-                {{-- Small summary box --}}
+                {{-- Info note --}}
                 <div class="w-full mt-2 border-t border-slate-100 pt-4 text-xs text-slate-500 text-center">
                     <p>Profile information is shared with buyers and sellers you chat with.</p>
                 </div>
@@ -71,7 +71,7 @@
                 </button>
             </div>
 
-            {{-- RIGHT COLUMN: Details grid --}}
+            {{-- RIGHT COLUMN --}}
             <div class="rounded-2xl bg-white shadow-md p-6 space-y-5">
 
                 <div>
@@ -146,15 +146,21 @@
                     </div>
                 </div>
 
-                {{-- Optional extra section --}}
+                {{-- ABOUT (ONLY THIS PART CHANGED) --}}
                 <div class="border-t border-slate-100 pt-4">
                     <h2 class="text-sm font-semibold text-slate-700 mb-2">
                         About
                     </h2>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        Final year student using EduSell to buy and sell academic items around campus.
-                        You can update this short description in the edit profile page.
-                    </p>
+
+                    @if(!empty($user->user_about))
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            {{ $user->user_about }}
+                        </p>
+                    @else
+                        <p class="text-sm text-slate-400 italic">
+                            No description added yet.
+                        </p>
+                    @endif
                 </div>
 
             </div>

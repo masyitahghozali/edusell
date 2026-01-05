@@ -28,6 +28,7 @@ class User extends Authenticatable
         'user_faculty',
         'user_location',
         'user_profile_picture',
+        'user_about',
     ];
 
 

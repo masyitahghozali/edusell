@@ -97,6 +97,7 @@ class ProfileController extends Controller
             'user_faculty'         => 'nullable|string|max:255',
             'user_location'        => 'nullable|string|max:255',
             'user_profile_picture' => 'nullable|image|max:4096',
+            'user_about'           => 'nullable|string|max:255',
         ]);
 
         // Update basic info
@@ -106,18 +107,21 @@ class ProfileController extends Controller
         $user->user_program   = $request->user_program;
         $user->user_faculty   = $request->user_faculty;
         $user->user_location  = $request->user_location;
+        $user->user_about     = $request->user_about;
+
 
         // Handle profile photo
         if ($request->hasFile('user_profile_picture')) {
 
             // Delete old file
-            if ($user->user_profile_picture) {
-                \Storage::disk('public')->delete($user->user_profile_picture);
+            if ($user->user_profile_picture &&
+            \Storage::disk('public')->exists($user->user_profile_picture)) {
+            \Storage::disk('public')->delete($user->user_profile_picture);
             }
 
             // Save new file
-            $filename = time().'_'.$request->file('user_profile_picture')->getClientOriginalName();
-            $path = $request->file('user_profile_picture')->storeAs('profile_pictures', $filename, 'public');
+            $path = $request->file('user_profile_picture')
+                        ->store('profile_pictures', 'public');
 
             // Save the FULL relative path in DB
             $user->user_profile_picture = $path;
