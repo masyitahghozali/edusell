@@ -1,4 +1,3 @@
-{{-- resources/views/auth/itemdetailpage.blade.php --}}
 <x-app-layout :showSearch="false">
     <div class="mx-auto max-w-6xl px-6 lg:px-8 py-8">
 
@@ -13,7 +12,7 @@
         {{-- 2-COLUMN LAYOUT --}}
         <div class="grid gap-8 lg:grid-cols-[minmax(0,2fr),minmax(260px,1fr)]">
 
-            {{-- LEFT: ITEM PHOTOS + DETAILS --}}
+            {{-- LEFT: ITEM DETAILS --}}
             <section class="rounded-2xl bg-white shadow-md p-5 lg:p-6 space-y-6">
 
                 {{-- Main photo --}}
@@ -85,7 +84,9 @@
 
                 {{-- Description --}}
                 <div class="space-y-2">
-                    <h3 class="text-sm font-semibold text-slate-800">Description</h3>
+                    <h3 class="text-sm font-semibold text-slate-800">
+                        Description
+                    </h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
                         {{ $item->item_description ?? 'No description provided.' }}
                     </p>
@@ -124,16 +125,15 @@
 
                     <div class="space-y-2 text-xs text-slate-600 leading-relaxed">
                         <p class="font-semibold text-slate-800">⚠ Important</p>
-                        <p>All payments are made during meet-up, and returns depend on the seller.</p>
-                        <p>EduSell does not support online payments or delivery.</p>
-                        <p>Always meet in a safe, public place.</p>
+                        <p>All payments are made during meet-up.</p>
+                        <p>EduSell does not support online payments.</p>
+                        <p>Always meet in a public place.</p>
                     </div>
 
                     {{-- Check account --}}
                     @if($item->user)
                         <a href="{{ route('otherprofilepage', $item->user) }}"
-                           class="w-full min-w-[150px] inline-flex items-center justify-center rounded-xl
-                                  bg-[#B91C1C] py-2.5 text-sm font-semibold text-white hover:bg-[#991B1B] transition">
+                           class="w-full rounded-xl bg-[#B91C1C] py-2.5 text-sm font-semibold text-white hover:bg-[#991B1B] transition">
                             Check account
                         </a>
                     @endif
@@ -142,12 +142,10 @@
                 {{-- Chat + favourite --}}
                 <div class="rounded-2xl bg-white shadow-md p-5 space-y-4 flex flex-col items-center text-center">
 
-                    {{-- Only show Chat seller if the viewer is not the seller --}}
-                    @if($item->user && $item->user->id !== auth()->id())
-                        {{-- Route has only {user}; "item" becomes ?item=ID --}}
-                        <a href="{{ route('chatpage', ['user' => $item->user->id, 'item' => $item->id]) }}"
-                           class="w-full min-w-[150px] inline-flex items-center justify-center rounded-xl bg-[#111827]
-                                  py-2.5 text-sm font-semibold text-white hover:bg-black transition">
+                    
+                    @if($item->user && auth()->id() !== $item->user->id)
+                        <a href="{{ route('chatpage', [$item->user, $item]) }}"
+                            class="w-full rounded-xl bg-[#111827] py-2.5 text-sm font-semibold text-white hover:bg-black">
                             Chat seller
                         </a>
                     @endif
@@ -158,7 +156,9 @@
                         <span>Add to favourites</span>
                     </button>
 
-                    <p class="text-[0.7rem] text-slate-500">p/s: first come, first serve.</p>
+                    <p class="text-[0.7rem] text-slate-500">
+                        p/s: first come, first serve.
+                    </p>
                 </div>
 
             </section>
