@@ -99,11 +99,11 @@ Route::middleware('auth')->group(function () {
         ->name('inboxpage');
 
     // Chat page (Route Model Binding)
-    Route::get('/chat/{user}/{item}', [ChatController::class, 'show'])
+    Route::get('/chat/{user}/{itemId}', [ChatController::class, 'show'])
         ->name('chatpage');
 
     // Send message
-    Route::post('/chat/{user}/{item}', [ChatController::class, 'send'])
+    Route::post('/chat/{user}/{itemId}', [ChatController::class, 'send'])
         ->name('chat.send');
 
     /*
